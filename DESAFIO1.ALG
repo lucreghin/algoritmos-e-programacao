@@ -306,13 +306,19 @@ fimprocedimento
 
 procedimento exibir_estatisticas()
 var
-i,q_aguardando,q_em_transporte,q_entregue,q_urgente,q_priori,q_normal: inteiro
+i,j,centro,norte,sul,leste,oeste,q_aguardando,q_em_transporte,q_entregue,q_urgente,q_priori,q_normal: inteiro
+maiorValor,maiorPeso,pesoTotal,maiorDistancia,valorTotal,custoTotal,mediaValor,mediaCusto,mediaPeso: real
+maiorRegiao: caractere
 inicio
 q_aguardando <- 0
 q_em_transporte <- 0
 q_entregue <- 0
 q_urgente <- 0
 q_priori <- 0
+q_normal <- 0
+pesoTotal <- 0
+valorTotal <- 0
+custoTotal <- 0
 
 //calculo das entregas por status
 para i de 1 até quantidadeEntregas faca
@@ -334,17 +340,99 @@ para i de 1 até quantidadeEntregas faca
           se entregas[i].prioridade = PRIORITARIA entao
           q_priori <- q_priori + 1
           senao
-               q_entregue <- q_entregue + 1
+               q_normal <- q_normal + 1
           fimse
      fimse
 fimpara
+//valores totais
+para i de 1 ate quantidadeEntregas faca
+     pesoTotal <- pesoTotal + entregas[i].peso
+     valorTotal <- valorTotal + entregas[i].valorMercadoria
+     custoTotal <- custoTotal + entregas[i].custo
+fimpara
+mediaPeso <- pesoTotal / quantidadeEntregas
+mediaValor <- valorTotal / quantidadeEntregas
+mediaCusto <- custoTotal / quantidadeEntregas
+
+//calculo do maior valor, peso e distancia
+para i de quantidadeEntregas ate 2 passo -1 faca
+     para j de 1 ate (i - 1) faca
+          se (entregas[j].valorMercadoria > entregas[j+1].valorMercadoria) entao
+          maiorValor <- entregas[j].valorMercadoria
+          senao
+          maiorValor <- entregas[j+1].valorMercadoria
+          fimse
+          se (entregas[j].peso > entregas[j+1].peso) entao
+          maiorPeso <- entregas[j].peso
+          senao
+          maiorPeso <- entregas[j+1].peso
+          fimse
+          se (entregas[j].distancia > entregas[j+1].distancia) entao
+          maiorDistancia <- entregas[j].distancia
+          senao
+          maiorDistancia <- entregas[j+1].distancia
+          fimse
+     fimpara
+fimpara
+
+para i de 1 ate quantidadeEntregas faca
+     se entregas[i].destino = 1 entao
+     centro <- centro + 1
+     senao
+          se entregas[i].destino = 2 entao
+          norte <- norte + 1
+          senao
+            se entregas[i].destino = 3 entao
+            sul <- sul +1
+            senao
+              se entregas[i].destino = 4 entao
+              leste <- leste + 1
+              senao
+              oeste <- oeste + 1
+              fimse
+            fimse
+          fimse
+     fimse
+fimpara
+se (centro > norte) e (centro > sul) e (centro > leste) e (centro > oeste) entao
+maiorRegiao <- "centro"
+senao
+   se (norte > centro) e (norte > sul) e (norte > leste) e (norte > oeste) entao
+   maiorRegiao <- "norte"
+   senao
+     se (sul > centro) e (sul > norte) e (sul > leste) e (sul > oeste) entao
+     maiorRegiao <- "sul"
+     senao
+       se (leste > centro) e (leste > norte) e (leste > sul) e (leste > oeste) entao
+       maiorRegiao <- "leste"
+       senao
+         se (oeste > centro) e (oeste > norte) e (oeste > sul) e (oeste > leste) entao
+         maiorRegiao <- "oeste"
+         fimse
+       fimse
+     fimse
+   fimse
+fimse
 
 escreval("Total de entregas:",quantidadeEntregas)
 escreval("Aguardando:",q_aguardando)
 escreval("Em transporte:",q_em_transporte)
 escreval("Entregue:",q_entregue)
-
+escreval("Urgente:",q_urgente)
+escreval("Prioritária:",q_priori)
+escreval("Normal:",q_normal)
+escreval("Peso total transportado:",pesoTotal)
+escreval("Média de peso:",mediaPeso)
+escreval("valor total mercadorias:",valorTotaL)
+ESCREVAL("valor médio mercadorias:",mediaValor)
+escreval("custo total estimado:",custoTotal)
+escreval("custo médio das entregas:",mediaCusto)
+escreval("entrega de maior valor:",maiorValor)
+escreval("entrega de maior peso:",maiorPeso )
+escreval("entrega de maior distancia:",maiorDistancia )
+escreval("região que recebeu maior quantidade de entregas:",maiorRegiao)
 fimprocedimento
+
 Inicio
 // Seção de Comandos, procedimento, funções, operadores, etc...
 quantidadeEntregas <- 0
