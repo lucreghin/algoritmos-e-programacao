@@ -1,6 +1,6 @@
 Algoritmo "LogiFast_desafio1"
-// Disciplina  : Algoritmo e Lógica de Programação 
-// Professor   : André Olímpio 
+// Disciplina  : Algoritmo e Lógica de Programação
+// Professor   : André Olímpio
 // Descrição   : Um programa que administra pedidos de uma empresa, organiza
 //               entregas, defini prioridades, acompanha cargas e auxilia na
 //               tomada de decisoes.
@@ -155,7 +155,7 @@ inicio
       fimse
       //acréscimos
       custoBase <- custoBase + percentualPeso + percentualPrioridade
-      
+
       RETORNE custoBase
 fimfuncao
 
@@ -221,7 +221,7 @@ inicio
    retorne resultado
 fimfuncao
 
-procedimento iniciar_transporte() //5
+procedimento iniciar_transporte() //caso 5
 var
    codigo: inteiro
    posicao: inteiro
@@ -243,6 +243,7 @@ inicio
    fimse
 fimprocedimento
 
+// caso 6
 procedimento finalizar_entrega()
 var
    codigo: inteiro
@@ -268,6 +269,7 @@ inicio
    fimse
 fimprocedimento
 
+//caso 7
 procedimento exibir_matriz()
 var
    i, j: inteiro
@@ -304,6 +306,7 @@ inicio
    fimpara
 fimprocedimento
 
+// caso 8
 procedimento exibir_estatisticas()
 var
 i,j,centro,norte,sul,leste,oeste,q_aguardando,q_em_transporte,q_entregue,q_urgente,q_priori,q_normal: inteiro
@@ -431,6 +434,56 @@ escreval("entrega de maior valor:",maiorValor)
 escreval("entrega de maior peso:",maiorPeso )
 escreval("entrega de maior distancia:",maiorDistancia )
 escreval("região que recebeu maior quantidade de entregas:",maiorRegiao)
+fimprocedimento
+
+percurso: vetor[1..MAX_REGIOES] de inteiro
+// caso 9
+
+funcao calcular_distancia_recursiva(posicaoAtual, quantidadeRegioes: inteiro): real
+inicio
+   se posicaoAtual >= quantidadeRegioes entao
+      retorne 0.0
+   senao
+      retorne (matrizRegioes[percurso[posicaoAtual], percurso[posicaoAtual + 1]] * 1.0) + calcular_distancia_recursiva(posicaoAtual + 1, quantidadeRegioes)
+   fimse
+fimfuncao
+
+
+
+procedimento calcular_percurso()
+var
+   i, quantidadeRegioes: inteiro
+   distanciaTotal: real
+inicio
+   escreval("========== CALCULAR PERCURSO ==========")
+   escreva("Quantas regioes tera o percurso? (2 a ", MAX_REGIOES, "): ")
+   leia(quantidadeRegioes)
+
+   enquanto (quantidadeRegioes < 2) ou (quantidadeRegioes > MAX_REGIOES) faca
+      escreval("Quantidade invalida! Digite um valor entre 2 e ", MAX_REGIOES, ".")
+      leia(quantidadeRegioes)
+   fimenquanto
+
+   para i de 1 ate quantidadeRegioes faca
+      repita
+         escreval("Informe a regiao ", i, ":")
+         escreval("1 - Centro")
+         escreval("2 - Norte")
+         escreval("3 - Sul")
+         escreval("4 - Leste")
+         escreval("5 - Oeste")
+         leia(percurso[i])
+
+         se (percurso[i] < 1) ou (percurso[i] > MAX_REGIOES) entao
+            escreval("Regiao invalida! Digite um codigo de 1 a 5.")
+         fimse
+      ate (percurso[i] >= 1) e (percurso[i] <= MAX_REGIOES)
+   fimpara
+
+   distanciaTotal <- calcular_distancia_recursiva(1, quantidadeRegioes)
+
+   escreval("")
+   escreval("Distancia total do percurso: ", distanciaTotal, " km")
 fimprocedimento
 
 Inicio
@@ -601,7 +654,7 @@ repita
       caso 8
            exibir_estatisticas()
       caso 9
-           //calculo_percurso
+           calcular_percurso()
       caso 10
            escreval("Sistema encerrado.")
       outrocaso
